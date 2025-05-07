@@ -1,0 +1,810 @@
+.admin-dashboard {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    padding-top: 60px;
+    padding-left: 250px;
+    transition: padding-left 0.3s;
+}
+
+.admin-dashboard.sidebar-collapsed {
+    padding-left: 70px;
+}
+
+.main-content {
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
+
+.section {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.section h2 {
+    color: #50247c;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.form-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-card h3 {
+    color: #50247c;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.form-card input,
+.form-card select {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 16px;
+}
+
+.form-card button {
+    background-color: #50247c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.form-card button:hover {
+    background-color: #3a1a5a;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.data-table {
+    width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.data-table th, .data-table td {
+    vertical-align: middle !important;
+    text-align: center !important;
+    padding: 12px !important;
+    word-break: break-word;
+}
+
+.data-table td img {
+    display: block;
+    margin: 0 auto;
+    max-width: 60px;
+    max-height: 40px;
+    border-radius: 4px;
+    background: #f5f5f5;
+}
+
+.data-table td a {
+    color: #50247c;
+    text-decoration: underline;
+    word-break: break-all;
+    display: inline-block;
+    max-width: 180px;
+    overflow-wrap: break-word;
+}
+
+.data-table th {
+    background-color: #50247c;
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-weight: 500;
+}
+
+.data-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.data-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+.data-table th.logo-col, .data-table td.logo-col {
+    width: 80px;
+    min-width: 60px;
+    max-width: 100px;
+}
+
+.data-table th:last-child, .data-table td:last-child {
+    min-width: 120px;
+    max-width: 160px;
+    width: 1%;
+}
+
+.data-table .action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    align-items: center;
+    justify-content: center;
+}
+
+.data-table button {
+    margin: 0;
+    min-width: 70px;
+    padding: 6px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+    .data-table {
+        min-width: 0;
+        max-width: 100vw;
+        font-size: 13px;
+    }
+    .table-container {
+        padding: 0 2px;
+    }
+    .data-table .action-buttons {
+        gap: 4px;
+    }
+    .data-table button {
+        min-width: 54px;
+        font-size: 11px;
+        padding: 5px 6px;
+    }
+}
+
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(80,36,124,0.1);
+    border: 2px solid #50247c;
+    padding: 24px 18px 18px 18px;
+    max-width: 500px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card h3 {
+    color: #50247c;
+    margin-bottom: 18px;
+    font-size: 18px;
+    text-align: center;
+    width: 100%;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+}
+
+.card .form-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    box-shadow: none;
+    padding: 0;
+    background: none;
+}
+
+.card .form-card input,
+.card .form-card select {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.card .form-card button {
+    width: 100%;
+    background: #50247c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background 0.2s;
+}
+
+.card .form-card button:hover {
+    background: #381a5a;
+}
+
+.validation-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    width: 100%;
+}
+
+.validation-section h2 {
+    margin-bottom: 30px;
+    text-align: center;
+    width: 100%;
+}
+
+.table-container.validation-table {
+    width: 100%;
+    max-width: 1400px;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.validation-section .data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(80,36,124,0.12);
+}
+
+.validation-section .data-table th {
+    background-color: #50247c;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.validation-section .data-table td {
+    padding: 14px;
+    text-align: center;
+    font-size: 15px;
+    white-space: nowrap;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.validation-section .data-table .validate-btn {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 25px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    display: inline-block;
+    width: 100%;
+    max-width: 180px;
+    margin: 0 auto;
+}
+
+.validation-section .data-table .validate-btn:hover {
+    background-color: #219150;
+}
+
+@media (max-width: 1200px) {
+    .table-container.validation-table {
+        max-width: 100%;
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 900px) {
+    .validation-section {
+        padding: 10px;
+    }
+
+    .validation-section h2 {
+        margin-bottom: 20px;
+        font-size: 20px;
+    }
+
+    .table-container.validation-table {
+        padding: 0 10px;
+    }
+
+    .validation-section .data-table {
+        min-width: 100%;
+        max-width: 100%;
+    }
+    
+    .validation-section .data-table th,
+    .validation-section .data-table td {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .validation-section .data-table .validate-btn {
+        padding: 8px 15px;
+        font-size: 13px;
+        max-width: 140px;
+    }
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.login-box {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-box h1 {
+    color: #6a1b9a;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.login-box button {
+    width: 100%;
+    background-color: #6a1b9a;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.login-box button:hover {
+    background-color: #4a148c;
+}
+
+.error-message {
+    color: #d32f2f;
+    background-color: #ffebee;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.sidebar-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-right: 16px;
+    height: 40px;
+    width: 40px;
+}
+
+.hamburger {
+    width: 24px;
+    height: 3px;
+    background: #50247c;
+    margin: 3px 0;
+    border-radius: 2px;
+    transition: all 0.3s;
+}
+
+@media (max-width: 900px) {
+    .admin-dashboard,
+    .admin-dashboard.sidebar-collapsed {
+        padding-left: 0;
+    }
+    .main-content {
+        padding-left: 0;
+    }
+}
+
+.form-toggle-btn {
+    background-color: #50247c;
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 18px;
+    margin-top: 0;
+    transition: background-color 0.3s;
+    box-shadow: 0 2px 4px rgba(80,36,124,0.08);
+}
+.form-toggle-btn:hover {
+    background-color: #3a1a5a;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.32);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    backdrop-filter: blur(5px);
+}
+
+.modal-box {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(80,36,124,0.18);
+    padding: 32px 28px 24px 28px;
+    min-width: 320px;
+    max-width: 420px;
+    width: 100%;
+    min-height: 0;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalIn 0.18s cubic-bezier(.4,1.3,.6,1) both;
+}
+
+@keyframes modalIn {
+    from { transform: scale(0.95) translateY(30px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.form-card .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+.form-card .modal-actions button {
+    flex: 1 1 0;
+    min-width: 120px;
+    max-width: 50%;
+    height: 40px;
+    font-size: 15px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.form-card .modal-actions .form-toggle-btn {
+    background: #aaa;
+    color: #fff;
+}
+.form-card .modal-actions .form-toggle-btn:hover {
+    background: #888;
+}
+.form-card .modal-actions button[type='submit'] {
+    background: #50247c;
+    color: #fff;
+}
+.form-card .modal-actions button[type='submit']:hover {
+    background: #3a1a5a;
+}
+
+.table-container.users-table .data-table {
+    max-width: 1200px;
+    min-width: 900px;
+}
+
+.table-container.entreprises-table .data-table,
+.table-container.centres-table .data-table {
+    max-width: 900px;
+    min-width: 600px;
+}
+
+.table-container.users-table .data-table th {
+    font-size: 15px;
+    padding: 14px 10px;
+    white-space: normal;
+    word-break: break-word;
+    background: #50247c;
+    color: #fff;
+    font-weight: 600;
+}
+
+.table-container.users-table .data-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+}
+
+.btn-edit {
+    background: #6a4fc7;
+    color: #fff;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.btn-edit:hover {
+    background: #50247c;
+}
+
+.btn-delete {
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.btn-delete:hover {
+    background: #c0392b;
+}
+
+.btn-center {
+    background: #27ae60;
+    color: #fff;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.btn-center:hover {
+    background: #219150;
+}
+
+.btn-entreprises {
+    background: #f39c12;
+    color: #fff;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.btn-entreprises:hover {
+    background: #d35400;
+}
+
+.action-buttons button.btn-edit,
+.action-buttons button.btn-delete,
+.action-buttons button.btn-center,
+.action-buttons button.btn-entreprises {
+    flex: 1 1 0;
+    min-width: 90px;
+    max-width: 90px;
+    height: 32px;
+    margin: 0;
+    padding: 0 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-sizing: border-box;
+}
+
+@media (max-width: 700px) {
+    .action-buttons button.btn-edit,
+    .action-buttons button.btn-delete,
+    .action-buttons button.btn-center,
+    .action-buttons button.btn-entreprises {
+        min-width: 64px;
+        max-width: 64px;
+        height: 26px;
+        font-size: 10px;
+    }
+}
+
+.table-container.centres-table .data-table {
+    max-width: 1000px;
+    min-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.table-container.centres-table .data-table th {
+    background-color: #50247c;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.table-container.centres-table .data-table td {
+    padding: 12px;
+    text-align: center;
+    font-size: 15px;
+    white-space: nowrap;
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table-container.centres-table .data-table .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+@media (max-width: 900px) {
+    .table-container.centres-table .data-table {
+        min-width: 100%;
+        max-width: 100%;
+    }
+    
+    .table-container.centres-table .data-table th,
+    .table-container.centres-table .data-table td {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .table-container.centres-table .data-table .action-buttons {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+.assignments .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: center;
+    margin-top: 20px;
+    width: 100%;
+    align-items: stretch;
+}
+
+.assignments .card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(80,36,124,0.1);
+    border: 2px solid #50247c;
+    padding: 24px 18px 18px 18px;
+    max-width: 500px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.assignments .card .form-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    box-shadow: none;
+    padding: 0;
+    background: none;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.assignments .card .form-card form {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.assignments .card .form-card .modal-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: auto;
+    width: 100%;
+    padding-top: 20px;
+}
+
+.assignments .card .form-card .modal-actions button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.assignments .card .form-card .modal-actions button:first-child {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.assignments .card .form-card .modal-actions button:first-child:hover {
+    background-color: #d0d0d0;
+}
+
+.assignments .card .form-card .modal-actions button:last-child {
+    background-color: #50247c;
+    color: white;
+}
+
+.assignments .card .form-card .modal-actions button:last-child:hover {
+    background-color: #3a1a5a;
+}
+
+@media (max-width: 900px) {
+    .assignments .cards-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .assignments .card {
+        max-width: 95%;
+    }
+
+    .assignments .card .form-card .modal-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .assignments .card .form-card .modal-actions button {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
