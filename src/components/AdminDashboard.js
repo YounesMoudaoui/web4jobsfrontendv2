@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './layout/Navbar';
@@ -21,25 +21,14 @@ const AdminDashboard = () => {
     const [user, setUser] = useState({ firstName: '', lastName: '', email: '', password: '', phone: '', role: '' });
     const [entreprise, setEntreprise] = useState({ nom: '', logoUrl: '', careerPageUrl: '' });
     const [centre, setCentre] = useState({ ville: '', nom: '', emailDomain: '' });
-    const [assignResponsable, setAssignResponsable] = useState({ 
-        userId: '', 
-        centreId: '',
-        userName: '',
-        centreName: ''
-    });
-    const [assignRecruiter, setAssignRecruiter] = useState({ userId: '', entrepriseId: '', entrepriseNames: '', isIntermediate: false });
     const [editRecruiterEntreprises, setEditRecruiterEntreprises] = useState({ userId: '', entrepriseId: '', entrepriseNames: '', isIntermediate: false });
     const [users, setUsers] = useState([]);
     const [entreprises, setEntreprises] = useState([]);
     const [centres, setCentres] = useState([]);
-    const [recruiters, setRecruiters] = useState([]);
-    const [pendingCandidates, setPendingCandidates] = useState([]);
     const [editingUser, setEditingUser] = useState(null);
     const [editingUserCentre, setEditingUserCentre] = useState({ userId: '', centreId: '', centreName: '' });
     const [editingEntreprise, setEditingEntreprise] = useState(null);
     const [editingCentre, setEditingCentre] = useState(null);
-    // eslint-disable-next-line no-unused-vars
-    const [editingRecruiter, setEditingRecruiter] = useState(null);
     const [activeSection, setActiveSection] = useState('users');
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [showCreateUserForm, setShowCreateUserForm] = useState(false);
@@ -49,7 +38,7 @@ const AdminDashboard = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const checkAuth = async () => {
+    const checkAuth = useCallback(async () => {
         try {
             const response = await axios.get('http://localhost:8080/api/auth/validate-token', {
                 withCredentials: true
@@ -61,23 +50,23 @@ const AdminDashboard = () => {
         } catch (error) {
             navigate('/login');
         }
-    };
+    }, [navigate]);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             await checkAuth();
             
-            const [usersResponse, entreprisesResponse, centresResponse, recruteursResponse] = await Promise.all([
-                axios.get('http://localhost:8080/api/users', { withCredentials: true }),
-                axios.get('http://localhost:8080/api/entreprises', { withCredentials: true }),
-                axios.get('http://localhost:8080/api/centres', { withCredentials: true }),
-                axios.get('http://localhost:8080/api/recruteurs', { withCredentials: true })
+            const [usersResponse, entreprisesResponse, centresResponse /*, recruteursResponse*/] = await Promise.all([
+                axios.get('http://localhost:8080/api/admin/users', { withCredentials: true }),
+                axios.get('http://localhost:8080/api/admin/entreprises', { withCredentials: true }),
+                axios.get('http://localhost:8080/api/admin/centres', { withCredentials: true }),
+                // axios.get('http://localhost:8080/api/admin/recruiters', { withCredentials: true }) // No longer used
             ]);
 
             setUsers(usersResponse.data);
             setEntreprises(entreprisesResponse.data);
             setCentres(centresResponse.data);
-            setRecruiters(recruteursResponse.data);
+            // setRecruiters(recruteursResponse.data); // No longer used
             setLoading(false);
         } catch (error) {
             if (error.response && error.response.status === 401) {
@@ -87,7 +76,7 @@ const AdminDashboard = () => {
                 setLoading(false);
             }
         }
-    };
+    }, [checkAuth, navigate]);
 
     useEffect(() => {
         fetchData();
@@ -97,7 +86,7 @@ const AdminDashboard = () => {
         const parsedUser = storedUser ? JSON.parse(storedUser) : null;
         console.log('Admin Dashboard - Parsed User:', parsedUser);
         console.log('Admin Dashboard - User Role:', localStorage.getItem('userRole'));
-    }, []);
+    }, [fetchData]);
 
     if (loading) {
         return (
@@ -326,127 +315,6 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleAssignResponsable = async (e) => {
-        e.preventDefault();
-        try {
-            await axios.post('/api/admin/assign-responsable', null, {
-                params: { 
-                    userId: assignResponsable.userId, 
-                    centreId: assignResponsable.centreId 
-                }
-            });
-            alert('Responsable assigné avec succès');
-            fetchData();
-            setAssignResponsable({ 
-                userId: '', 
-                centreId: '',
-                userName: '',
-                centreName: ''
-            });
-        } catch (error) {
-            alert('Erreur lors de l\'assignation');
-        }
-    };
-
-    const handleAssignRecruiter = async (e) => {
-        e.preventDefault();
-        try {
-            if (assignRecruiter.isIntermediate) {
-                await axios.post('/api/admin/assign-intermediate-recruiter', null, {
-                    params: { userId: assignRecruiter.userId, entrepriseNames: assignRecruiter.entrepriseNames }
-                });
-            } else {
-                await axios.post('/api/admin/assign-recruiter', null, {
-                    params: {
-                        userId: assignRecruiter.userId,
-                        entrepriseIds: [assignRecruiter.entrepriseId],
-                        isIntermediate: false
-                    }
-                });
-            }
-            alert('Recruteur assigné avec succès');
-            fetchData();
-            setAssignRecruiter({ userId: '', entrepriseId: '', entrepriseNames: '', isIntermediate: false });
-        } catch (error) {
-            alert('Erreur lors de l\'assignation du recruteur');
-        }
-    };
-
-    const handleUpdateRecruiterEntreprises = async (e) => {
-        e.preventDefault();
-        try {
-            console.log('Tentative de mise à jour des entreprises du recruteur:', editRecruiterEntreprises);
-            
-            if (editRecruiterEntreprises.isIntermediate) {
-                // Pour un recruteur intermédiaire
-                const response = await axios.post('/api/admin/assign-intermediate-recruiter', null, {
-                    params: {
-                        userId: editRecruiterEntreprises.userId,
-                        entrepriseNames: editRecruiterEntreprises.entrepriseNames
-                    },
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                console.log('Réponse de la mise à jour (intermédiaire):', response.data);
-            } else {
-                // Pour un recruteur non-intermédiaire
-                const response = await axios.post('/api/admin/assign-recruiter', null, {
-                    params: {
-                        userId: editRecruiterEntreprises.userId,
-                        entrepriseIds: editRecruiterEntreprises.entrepriseId,
-                        isIntermediate: false
-                    },
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                console.log('Réponse de la mise à jour (non-intermédiaire):', response.data);
-            }
-            
-            alert('Entreprises du recruteur mises à jour avec succès');
-            fetchData();
-            setEditingRecruiter(null);
-            setEditRecruiterEntreprises({ userId: '', entrepriseId: '', entrepriseNames: '', isIntermediate: false });
-        } catch (error) {
-            console.error('Erreur lors de la mise à jour des entreprises du recruteur:', error);
-            if (error.response) {
-                console.error('Détails de l\'erreur:', {
-                    status: error.response.status,
-                    data: error.response.data
-                });
-            }
-            alert('Erreur lors de la mise à jour des entreprises du recruteur');
-        }
-    };
-
-    const handleValidateCandidate = async (userId) => {
-        try {
-            await axios.post(`/api/admin/validation/validate/${userId}`);
-            alert('Candidat validé avec succès');
-            fetchData();
-        } catch (error) {
-            alert('Erreur lors de la validation du candidat');
-        }
-    };
-
-    const handleUpdateUserCentre = async (e) => {
-        e.preventDefault();
-        try {
-            await axios.post('/api/admin/assign-responsable', null, {
-                params: { 
-                    userId: editingUserCentre.userId, 
-                    centreId: editingUserCentre.centreId 
-                }
-            });
-            alert('Centre mis à jour avec succès');
-            fetchData();
-            setEditingUserCentre({ userId: '', centreId: '', centreName: '' });
-        } catch (error) {
-            alert('Erreur lors de la mise à jour du centre');
-        }
-    };
-
     const handleLogout = () => {
         localStorage.removeItem('isAuthenticated');
         localStorage.removeItem('userRole');
@@ -623,144 +491,6 @@ const AdminDashboard = () => {
                                                         Supprimer
                                                     </button>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                );
-            case 'assignments':
-                return (
-                    <div className="section assignments">
-                        <h2>Assignations</h2>
-                        <div className="cards-container">
-                            <div className="card">
-                                <h3>Assigner un Responsable à un Centre</h3>
-                                <form onSubmit={handleAssignResponsable} className="form-card">
-                                    <select 
-                                        value={assignResponsable.userName}
-                                        onChange={(e) => {
-                                            const selectedUser = users.find(u => `${u.firstName} ${u.lastName}` === e.target.value);
-                                            setAssignResponsable({
-                                                ...assignResponsable,
-                                                userId: selectedUser ? selectedUser.id : '',
-                                                userName: e.target.value
-                                            });
-                                        }}
-                                    >
-                                        <option value="">Sélectionner un responsable</option>
-                                        {users
-                                            .filter(u => u.role === 'RESPONSABLE_CENTRE')
-                                            .map(u => (
-                                                <option key={u.id} value={`${u.firstName} ${u.lastName}`}>
-                                                    {u.firstName} {u.lastName} ({u.email})
-                                                </option>
-                                            ))
-                                        }
-                                    </select>
-
-                                    <select 
-                                        value={assignResponsable.centreName}
-                                        onChange={(e) => {
-                                            const selectedCentre = centres.find(c => c.nom === e.target.value);
-                                            setAssignResponsable({
-                                                ...assignResponsable,
-                                                centreId: selectedCentre ? selectedCentre.id : '',
-                                                centreName: e.target.value
-                                            });
-                                        }}
-                                    >
-                                        <option value="">Sélectionner un centre</option>
-                                        {centres.map(c => (
-                                            <option key={c.id} value={c.nom}>
-                                                {c.nom} - {c.ville}
-                                            </option>
-                                        ))}
-                                    </select>
-
-                                    <div className="modal-actions">
-                                        <button type="button" onClick={() => setAssignResponsable({ userId: '', centreId: '', userName: '', centreName: '' })}>Annuler</button>
-                                        <button type="submit">Assigner</button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div className="card">
-                                <h3>Assigner un Recruteur à des Entreprises</h3>
-                                <form onSubmit={handleAssignRecruiter} className="form-card">
-                                    <select value={assignRecruiter.userId} onChange={(e) => setAssignRecruiter({ ...assignRecruiter, userId: e.target.value })}>
-                                        <option value="">Sélectionner un recruteur</option>
-                                        {recruiters.map(r => (
-                                            <option key={r.id} value={r.id}>{r.firstName} {r.lastName} ({r.email})</option>
-                                        ))}
-                                    </select>
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            checked={assignRecruiter.isIntermediate}
-                                            onChange={(e) => setAssignRecruiter({ ...assignRecruiter, isIntermediate: e.target.checked, entrepriseId: '', entrepriseNames: '' })}
-                                        />
-                                        Recruteur intermédiaire
-                                    </label>
-                                    {assignRecruiter.isIntermediate ? (
-                                        <input
-                                            type="text"
-                                            placeholder="Noms des entreprises (séparés par des virgules)"
-                                            value={assignRecruiter.entrepriseNames}
-                                            onChange={(e) => setAssignRecruiter({ ...assignRecruiter, entrepriseNames: e.target.value })}
-                                        />
-                                    ) : (
-                                        <select
-                                            value={assignRecruiter.entrepriseId}
-                                            onChange={(e) => setAssignRecruiter({ ...assignRecruiter, entrepriseId: e.target.value })}
-                                        >
-                                            <option value="">Sélectionner une entreprise</option>
-                                            {entreprises.map(e => (
-                                                <option key={e.id} value={e.id}>{e.nom}</option>
-                                            ))}
-                                        </select>
-                                    )}
-                                    <div className="modal-actions">
-                                        <button type="button" onClick={() => setAssignRecruiter({ userId: '', entrepriseId: '', entrepriseNames: '', isIntermediate: false })}>Annuler</button>
-                                        <button type="submit">Assigner</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                );
-            case 'validation':
-                return (
-                    <div className="section validation-section">
-                        <h2>Validation des Candidats</h2>
-                        <div className="table-container validation-table">
-                            <table className="data-table auth-table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Prénom</th>
-                                        <th>Nom</th>
-                                        <th>Email</th>
-                                        <th>Rôle</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {pendingCandidates.map(c => (
-                                        <tr key={c.id}>
-                                            <td>{c.id}</td>
-                                            <td>{c.firstName}</td>
-                                            <td>{c.lastName}</td>
-                                            <td>{c.email}</td>
-                                            <td>{c.role}</td>
-                                            <td>
-                                                <button 
-                                                    className="button-primary validate-btn"
-                                                    onClick={() => handleValidateCandidate(c.id)}
-                                                >
-                                                    Valider
-                                                </button>
                                             </td>
                                         </tr>
                                     ))}

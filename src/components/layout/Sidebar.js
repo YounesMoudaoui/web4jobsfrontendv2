@@ -5,7 +5,7 @@ const Sidebar = ({ activeSection, setActiveSection, onToggleSidebar, collapsed }
     useEffect(() => {
         console.log('Sidebar Component Mounted');
         console.log('Props:', { activeSection, collapsed });
-    }, []);
+    }, [activeSection, collapsed]);
 
     const role = localStorage.getItem('userRole');
     console.log('Sidebar Role:', role);
@@ -18,8 +18,8 @@ const Sidebar = ({ activeSection, setActiveSection, onToggleSidebar, collapsed }
                 { id: 'users', label: 'Gestion des Utilisateurs', icon: '👥' },
                 { id: 'entreprises', label: 'Gestion des Entreprises', icon: '🏢' },
                 { id: 'centres', label: 'Gestion des Centres', icon: '📍' },
-                { id: 'assignments', label: 'Assignations', icon: '🔗' },
-                { id: 'validation', label: 'Validation des Candidats', icon: '✅' }
+                // { id: 'assignments', label: 'Assignations', icon: '🔗' },
+                // { id: 'validation', label: 'Validation des Candidats', icon: '✅' } // Already removed
             ];
         } else if (role === 'RECRUTEUR') {
             sections = [
