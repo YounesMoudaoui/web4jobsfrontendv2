@@ -38,6 +38,8 @@ const AdminDashboard = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
+    const [currentUser, setCurrentUser] = useState(null);
+
     const checkAuth = useCallback(async () => {
         try {
             const response = await axios.get('http://localhost:8080/api/auth/validate-token', {
@@ -46,46 +48,47 @@ const AdminDashboard = () => {
             
             if (response.data.role !== 'ADMIN' && response.data.role !== 'DIRECTEUR_EXECUTIF') {
                 navigate('/login');
+                return null;
             }
+            setCurrentUser(response.data);
+            return response.data;
         } catch (error) {
             navigate('/login');
+            return null;
         }
     }, [navigate]);
 
     const fetchData = useCallback(async () => {
+        setLoading(true);
+        const authedUser = await checkAuth();
+        if (!authedUser) {
+            setLoading(false);
+            return;
+        }
+        
         try {
-            await checkAuth();
-            
-            const [usersResponse, entreprisesResponse, centresResponse /*, recruteursResponse*/] = await Promise.all([
+            const [usersResponse, entreprisesResponse, centresResponse] = await Promise.all([
                 axios.get('http://localhost:8080/api/admin/users', { withCredentials: true }),
                 axios.get('http://localhost:8080/api/admin/entreprises', { withCredentials: true }),
                 axios.get('http://localhost:8080/api/admin/centres', { withCredentials: true }),
-                // axios.get('http://localhost:8080/api/admin/recruiters', { withCredentials: true }) // No longer used
             ]);
 
             setUsers(usersResponse.data);
             setEntreprises(entreprisesResponse.data);
             setCentres(centresResponse.data);
-            // setRecruiters(recruteursResponse.data); // No longer used
-            setLoading(false);
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 navigate('/login');
             } else {
                 setError('Erreur lors du chargement des données');
-                setLoading(false);
             }
+        } finally {
+            setLoading(false);
         }
     }, [checkAuth, navigate]);
 
     useEffect(() => {
         fetchData();
-        
-        // Add debugging for user role and localStorage
-        const storedUser = localStorage.getItem('user');
-        const parsedUser = storedUser ? JSON.parse(storedUser) : null;
-        console.log('Admin Dashboard - Parsed User:', parsedUser);
-        console.log('Admin Dashboard - User Role:', localStorage.getItem('userRole'));
     }, [fetchData]);
 
     if (loading) {
@@ -106,14 +109,18 @@ const AdminDashboard = () => {
         );
     }
 
-    const userRole = localStorage.getItem('userRole');
+    if (!currentUser) {
+        return <p>Authenticating admin...</p>;
+    }
+
+    const userRole = currentUser ? currentUser.role : null;
     const isAdminRole = userRole === 'ADMIN' || userRole === 'DIRECTEUR_EXECUTIF';
 
     const handleCreateUser = async (e) => {
         e.preventDefault();
         try {
             console.log('Tentative de création d\'utilisateur:', user);
-            const response = await axios.post('/api/admin/users', user);
+            const response = await axios.post('/api/admin/users', user, { withCredentials: true });
             console.log('Utilisateur créé avec succès:', response.data);
             alert('Utilisateur créé avec succès');
             fetchData();
@@ -158,7 +165,7 @@ const AdminDashboard = () => {
         e.preventDefault();
         try {
             // Mise à jour des informations de base de l'utilisateur
-            await axios.put(`/api/admin/users/${editingUser.id}`, editingUser);
+            await axios.put(`/api/admin/users/${editingUser.id}`, editingUser, { withCredentials: true });
 
             // Gestion des assignations selon le rôle
             if (editingUser.role === 'RESPONSABLE_CENTRE' && editingUserCentre.centreId) {
@@ -166,7 +173,8 @@ const AdminDashboard = () => {
                     params: {
                         userId: editingUser.id,
                         centreId: editingUserCentre.centreId
-                    }
+                    },
+                    withCredentials: true
                 });
             } else if (editingUser.role === 'RECRUTEUR') {
                 if (editRecruiterEntreprises.isIntermediate) {
@@ -175,7 +183,8 @@ const AdminDashboard = () => {
                         params: {
                             userId: editingUser.id,
                             entrepriseNames: editRecruiterEntreprises.entrepriseNames
-                        }
+                        },
+                        withCredentials: true
                     });
                 } else if (editRecruiterEntreprises.entrepriseId) {
                     // Pour un recruteur non-intermédiaire
@@ -184,7 +193,8 @@ const AdminDashboard = () => {
                             userId: editingUser.id,
                             entrepriseIds: editRecruiterEntreprises.entrepriseId,
                             isIntermediate: false
-                        }
+                        },
+                        withCredentials: true
                     });
                 }
             }
@@ -208,7 +218,7 @@ const AdminDashboard = () => {
 
     const handleDeleteUser = async (id) => {
         try {
-            await axios.delete(`/api/admin/users/${id}`);
+            await axios.delete(`/api/admin/users/${id}`, { withCredentials: true });
             alert('Utilisateur supprimé avec succès');
             fetchData();
         } catch (error) {
@@ -220,7 +230,7 @@ const AdminDashboard = () => {
         e.preventDefault();
         try {
             console.log('Tentative de création d\'entreprise:', entreprise);
-            const response = await axios.post('/api/admin/entreprises', entreprise);
+            const response = await axios.post('/api/admin/entreprises', entreprise, { withCredentials: true });
             console.log('Entreprise créée avec succès:', response.data);
             alert('Entreprise créée avec succès');
             fetchData();
@@ -241,7 +251,7 @@ const AdminDashboard = () => {
     const handleUpdateEntreprise = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`/api/admin/entreprises/${editingEntreprise.id}`, editingEntreprise);
+            await axios.put(`/api/admin/entreprises/${editingEntreprise.id}`, editingEntreprise, { withCredentials: true });
             alert('Entreprise mise à jour avec succès');
             fetchData();
             setEditingEntreprise(null);
@@ -252,7 +262,7 @@ const AdminDashboard = () => {
 
     const handleDeleteEntreprise = async (id) => {
         try {
-            await axios.delete(`/api/admin/entreprises/${id}`);
+            await axios.delete(`/api/admin/entreprises/${id}`, { withCredentials: true });
             alert('Entreprise supprimée avec succès');
             fetchData();
         } catch (error) {
@@ -268,7 +278,7 @@ const AdminDashboard = () => {
                 return;
             }
             console.log('Tentative de création de centre:', centre);
-            const response = await axios.post('/api/admin/centres', centre);
+            const response = await axios.post('/api/admin/centres', centre, { withCredentials: true });
             console.log('Centre créé avec succès:', response.data);
             alert('Centre créé avec succès');
             fetchData();
@@ -295,7 +305,7 @@ const AdminDashboard = () => {
                 alert('Veuillez remplir tous les champs obligatoires');
                 return;
             }
-            await axios.put(`/api/admin/centres/${editingCentre.id}`, editingCentre);
+            await axios.put(`/api/admin/centres/${editingCentre.id}`, editingCentre, { withCredentials: true });
             alert('Centre mis à jour avec succès');
             fetchData();
             setEditingCentre(null);
@@ -307,7 +317,7 @@ const AdminDashboard = () => {
 
     const handleDeleteCentre = async (id) => {
         try {
-            await axios.delete(`/api/admin/centres/${id}`);
+            await axios.delete(`/api/admin/centres/${id}`, { withCredentials: true });
             alert('Centre supprimé avec succès');
             fetchData();
         } catch (error) {
@@ -506,9 +516,15 @@ const AdminDashboard = () => {
 
     return (
         <div className={`admin-dashboard${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
-            <Navbar onLogout={handleLogout} />
+            <Navbar 
+                userRole={userRole}
+                onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
+                sidebarCollapsed={sidebarCollapsed}
+                onLogout={handleLogout}
+            />
             {isAdminRole ? (
                 <Sidebar 
+                    userRole={userRole}
                     activeSection={activeSection} 
                     setActiveSection={setActiveSection} 
                     onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}

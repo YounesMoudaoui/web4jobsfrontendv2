@@ -1,16 +1,18 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/Sidebar.css';
 
-const Sidebar = ({ activeSection, setActiveSection, onToggleSidebar, collapsed }) => {
-    useEffect(() => {
-        console.log('Sidebar Component Mounted');
-        console.log('Props:', { activeSection, collapsed });
-    }, [activeSection, collapsed]);
+const Sidebar = ({ userRole, activeSection, setActiveSection, onToggleSidebar, collapsed }) => {
+    const navigate = useNavigate();
+    
+    // useEffect(() => {
+    //     console.log('Sidebar Component Mounted');
+    //     console.log('Props:', { userRole, activeSection, collapsed });
+    // }, [userRole, activeSection, collapsed]);
 
-    const role = localStorage.getItem('userRole');
-    console.log('Sidebar Role:', role);
+    const role = userRole;
+    // console.log('Sidebar Role:', role); // Optional: keep for very specific debugging if needed
 
-    // Définir les sections selon le rôle
     let sections = [];
     try {
         if (role === 'ADMIN') {
@@ -18,34 +20,28 @@ const Sidebar = ({ activeSection, setActiveSection, onToggleSidebar, collapsed }
                 { id: 'users', label: 'Gestion des Utilisateurs', icon: '👥' },
                 { id: 'entreprises', label: 'Gestion des Entreprises', icon: '🏢' },
                 { id: 'centres', label: 'Gestion des Centres', icon: '📍' },
-                // { id: 'assignments', label: 'Assignations', icon: '🔗' },
-                // { id: 'validation', label: 'Validation des Candidats', icon: '✅' } // Already removed
             ];
         } else if (role === 'RECRUTEUR') {
             sections = [
-                { id: 'entreprises', label: 'Mes Entreprises', icon: '🏢' }
-                // Ajoute d'autres sections spécifiques au recruteur ici
+                { id: 'job-offers', label: 'Gestion des Offres', icon: '📄' }
             ];
         } else if (role === 'RESPONSABLE_CENTRE') {
             sections = [
                 { id: 'centres', label: 'Mon Centre', icon: '📍' }
-                // Ajoute d'autres sections spécifiques ici
             ];
         } else {
-            // Par défaut, aucune section ou sections publiques
             sections = [];
         }
     } catch (error) {
-        console.error('Error in Sidebar sections generation:', error);
+        // console.error('Error in Sidebar sections generation:', error); // Optional
         sections = [];
     }
 
-    console.log('Sidebar Sections:', sections);
+    // console.log('Sidebar Sections:', sections); // Optional
 
-    // Si aucune section n'est disponible, ne pas rendre le composant
-    if (sections.length === 0) {
-        console.warn('No sections available for role:', role);
-        return null;
+    if (!role || sections.length === 0) {
+        // console.warn('No sections available for role or role not provided:', role); // Optional
+        return null; // Keep this to avoid rendering an empty sidebar
     }
 
     return (
@@ -63,7 +59,9 @@ const Sidebar = ({ activeSection, setActiveSection, onToggleSidebar, collapsed }
                     <li 
                         key={section.id}
                         className={activeSection === section.id ? 'active' : ''}
-                        onClick={() => setActiveSection(section.id)}
+                        onClick={() => {
+                            setActiveSection(section.id);
+                        }}
                         title={section.label}
                     >
                         <span className="icon">{section.icon}</span>

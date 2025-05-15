@@ -16,13 +16,16 @@ function Login() {
         setIsLoading(true);
 
         try {
-            const formData = new FormData();
-            formData.append('email', email);
-            formData.append('password', password);
+            // Create a plain JavaScript object for the payload
+            const payload = {
+                email: email,
+                password: password
+            };
 
-            const response = await axios.post('http://localhost:8080/api/login', formData, {
+            // Send as application/json
+            const response = await axios.post('http://localhost:8080/api/login', payload, {
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/json' // Set Content-Type to application/json
                 },
                 withCredentials: true
             });
@@ -43,6 +46,8 @@ function Login() {
 
                 if (response.data.role === 'ADMIN' || response.data.role === 'DIRECTEUR_EXECUTIF') {
                     navigate('/admin-dashboard');
+                } else if (response.data.role === 'RECRUTEUR') {
+                    navigate('/recruiter-dashboard');
                 } else {
                     navigate('/dashboard');
                 }

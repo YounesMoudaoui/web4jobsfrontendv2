@@ -1,0 +1,14 @@
+export const ContractType = {
+    STAGE: 'STAGE',
+    EMPLOI_CDI: 'EMPLOI_CDI',
+    EMPLOI_CDD: 'EMPLOI_CDD',
+    ALTERNANCE: 'ALTERNANCE',
+    FREELANCE: 'FREELANCE',
+    AUTRE: 'AUTRE'
+};
+
+export const OfferModality = {
+    SUR_SITE: 'SUR_SITE',
+    HYBRIDE: 'HYBRIDE',
+    TELETRAVAIL_COMPLET: 'TELETRAVAIL_COMPLET'
+}; 

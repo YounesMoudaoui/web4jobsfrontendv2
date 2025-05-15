@@ -1,0 +1,225 @@
+/* Auto4jobsFrontend/src/styles/RecruiterJobOffersView.css */
+
+.recruiter-job-offers-view .view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.recruiter-job-offers-view .view-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.recruiter-job-offers-view .btn {
+    padding: 8px 15px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.recruiter-job-offers-view .btn-primary {
+    background-color: #50247c; /* Theme purple */
+    color: white;
+}
+
+.recruiter-job-offers-view .btn-primary:hover {
+    background-color: #3a1a5a; /* Darker purple */
+}
+
+.no-offers-message {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.no-offers-message p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.job-offer-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); /* Responsive grid */
+    gap: 20px;
+}
+
+.job-offer-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease;
+}
+
+.job-offer-card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.job-offer-card.status-inactive {
+    opacity: 0.7;
+    /* background-color: #fdf6f6; /* Optional: slightly different bg for inactive */
+}
+
+.job-offer-card .card-header {
+    display: flex;
+    align-items: flex-start; /* Align items to the top */
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    gap: 15px;
+}
+
+.job-offer-card .company-logo {
+    flex-shrink: 0;
+}
+
+.job-offer-card .company-logo img {
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+    object-fit: contain;
+    border: 1px solid #eee;
+}
+
+.job-offer-card .logo-placeholder {
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 24px;
+}
+
+.job-offer-card .offer-title-company {
+    flex-grow: 1;
+}
+
+.job-offer-card .offer-title-company h3 {
+    margin: 0 0 5px 0;
+    font-size: 18px;
+    color: black; /* Changed from #50247c */
+    font-weight: 600;
+}
+
+.job-offer-card .company-name {
+    margin: 0;
+    font-size: 14px;
+    color: black; /* Changed from #555 */
+}
+
+.job-offer-card .status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    align-self: flex-start; /* Align badge itself to the top */
+    margin-left: auto; /* Pushes badge to the right if there's space, but flex-start alignment on parent is key */
+    flex-shrink: 0;
+}
+
+.job-offer-card .status-badge.active {
+    background-color: #d4edda; /* Light green */
+    color: #155724; /* Dark green */
+    border: 1px solid #c3e6cb;
+}
+
+.job-offer-card .status-badge.inactive {
+    background-color: #f8d7da; /* Light red */
+    color: #721c24; /* Dark red */
+    border: 1px solid #f5c6cb;
+}
+
+.job-offer-card .card-body {
+    padding: 15px;
+    flex-grow: 1; /* Allows body to take up available space */
+}
+
+.job-offer-card .offer-details p {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: black; /* Changed from #333 */
+    display: flex;
+    align-items: center;
+}
+
+.job-offer-card .offer-details p i {
+    margin-right: 8px;
+    color: black; /* Changed from #50247c */
+    width: 16px; /* Ensure icons align well */
+    text-align: center;
+}
+
+.job-offer-card .card-footer {
+    padding: 10px 15px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.job-offer-card .timestamps {
+    font-size: 11px;
+    color: #777;
+}
+
+.job-offer-card .timestamps small {
+    display: block;
+}
+
+.job-offer-card .offer-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.job-offer-card .offer-actions .btn-icon {
+    background: none;
+    border: 1px solid transparent; /* Keep space but no visible border initially */
+    color: #555;
+    padding: 6px 10px;
+    font-size: 13px;
+}
+
+.job-offer-card .offer-actions .btn-icon:hover {
+    border-color: #ddd;
+    background-color: #f5f5f5;
+}
+
+.job-offer-card .offer-actions .btn-edit:hover {
+    color: #28a745; /* Green for edit */
+}
+
+.job-offer-card .offer-actions .btn-delete:hover {
+    color: #dc3545; /* Red for delete */
+}
+
+.job-offer-card .offer-actions .btn-activate:hover {
+    color: #17a2b8; /* Blue for activate */
+}
+
+.job-offer-card .offer-actions .btn-deactivate:hover {
+    color: #ffc107; /* Orange for deactivate */
+}
+
+.job-offer-card .offer-actions .btn-icon i {
+    margin-right: 5px;
+} 
